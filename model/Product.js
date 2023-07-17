@@ -13,7 +13,7 @@ export default class Product {
 
   constructor(data, element, parentOpts) {
     this.colors = Object.entries(data.color);
-    this.specifications = data.specifications;
+    this.specifications = data.specifications.filter((item) => item.status);
     this.currentColor = 0;
     this.currentSpecification = 0;
     this._count = 0;
@@ -37,7 +37,11 @@ export default class Product {
 
   get maxCount() {
     return this.specifications[this.currentSpecification].balance.reduce(
-      (acc, value) => acc + value.count,
+      (acc, value) => {
+        if (value.name !== "Магазин") {
+          return acc + value.count;
+        } else return acc;
+      },
       0
     );
   }
@@ -105,12 +109,18 @@ export default class Product {
 
   render() {
     console.log("render");
+
+    if (!this.specification) {
+      return (this.element.innerHTML = `<div>Товар закончился</div>`);
+    }
     this.element.innerHTML = `
     <div class="name">name: ${this.name}</div>
     <div class="color">color: ${this.color}</div>
     <div class="size">size: ${this.size}</div>
     <div class="price">price: ${this.price} RUB</div>
-    <div class="count">${this.count}</div>
+    <div class="count">${this.count} ${
+      this.maxCount === 0 ? "Нет на складе" : ""
+    }</div>
     <div class="buttons">
     <div class="button plus">+</div>
     <div class="button minus">-</div>
