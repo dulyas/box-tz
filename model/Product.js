@@ -107,8 +107,27 @@ export default class Product {
     this.render();
   };
 
+  clearEvents() {
+    this.element.querySelector(".plus") &&
+      this.element
+        .querySelector(".plus")
+        .removeEventListener("click", this.incCount);
+    this.element.querySelector(".minus") &&
+      this.element
+        .querySelector(".minus")
+        .removeEventListener("click", this.decCount);
+    this.element.querySelector(".size-btn") &&
+      this.element
+        .querySelector(".size-btn")
+        .removeEventListener("click", this.changeSize);
+    this.element.querySelector(".color-btn") &&
+      this.element
+        .querySelector(".color-btn")
+        .removeEventListener("click", this.changeColor);
+  }
+
   render() {
-    console.log("render");
+    this.clearEvents();
 
     if (!this.specification) {
       return (this.element.innerHTML = `<div>Товар закончился</div>`);
